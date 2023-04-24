@@ -10,10 +10,32 @@ const dbConnection = require('./src/utils/mysql.connector')
 
 const { Post } = require('./src/posts/post.model')
 
-// app.get('/api/v1', function (req, res) {
-//     return res.json(req.headers)
-// })
+ app.get('/api/v1', function (req, res) {
+  return res.json(req.headers)
+})
 
+// use the connection for database queries...
+
+
+
+
+//update existing post
+//name, imageUrl, summary
+app.patch('/api/v1/posts/:id', function(request, response){
+    console.log(request.params )
+    //get id, use id to select a posts from db, upadate post and end request
+
+   const sql ='SELECT * FROM posts WHERE id =$ {request.params.id} LIMIT 1'
+
+    return dbConnection.query(sql, function(err, rows){
+        if(err) throw err
+
+        return response.json(rows)
+    })
+})
+
+
+//delete the existing post
 app.get('/api/v1/posts', function (req, res) {
     var sql2 = "SElECT * FROM posts"
     return dbConnection.query(sql2, function (err, result) {
@@ -44,7 +66,7 @@ app.listen(3000, function () {
     console.log('ARTISAN listening on port 3000')
 
     dbConnection.connect(function (err) {
-        if (err) throw err
+        //if (err) throw err
 
         console.log("Connected to MySQL")
     })
